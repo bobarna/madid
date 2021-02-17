@@ -1,0 +1,6 @@
+#ifndef MADID_CONSTANTS_H
+#define MADID_CONSTANTS_H
+
+
+
+#endif //MADID_CONSTANTS_H
