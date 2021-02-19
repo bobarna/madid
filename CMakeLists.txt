@@ -6,7 +6,15 @@ set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_FLAGS "-Wall -Wextra -pedantic")
 
 add_executable(${PROJECT_NAME}
-        src/main.cpp src/utility/constants.h src/utility/gl.h src/utility/application.cpp src/utility/application.h)
+        src/main.cpp
+        src/constants.h 
+        src/utility/gl.h
+        src/application.cpp
+        src/application.h
+        src/scene.cpp
+        src/scene.h
+        )
+
 
 # opengl
 find_package(OpenGL REQUIRED)
