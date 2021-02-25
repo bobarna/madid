@@ -1,9 +1,9 @@
 #ifndef MADID_CONSTANTS_H
 #define MADID_CONSTANTS_H
 
-static int WIDTH = 500;
-static int HEIGHT = 500;
+const int WIDTH = 500;
+const int HEIGHT = 500;
 
-static char *NAME = "Madid";
+char * const NAME = "Madid";
 
 #endif

@@ -3,7 +3,7 @@ project(madid)
 
 set(CMAKE_CXX_STANDARD 17)
 #set(CMAKE_CXX_FLAGS "-Wall -Wextra -Werror -pedantic")
-set(CMAKE_CXX_FLAGS "-Wall -Wextra -pedantic")
+set(CMAKE_CXX_FLAGS "-Wall -Wextra -pedantic -Wunused-parameter")
 
 add_executable(${PROJECT_NAME}
         src/main.cpp
@@ -13,6 +13,8 @@ add_executable(${PROJECT_NAME}
         src/application.h
         src/scene.cpp
         src/scene.h
+        src/rendering/camera.cpp
+        src/rendering/camera.h
         )
 
 

@@ -16,8 +16,6 @@ class Application {
     int width = WIDTH;
     int height = HEIGHT;
 
-    char *name = "Madid";
-
     static bool dragging;
     // Callback functions
     static void error_callback(int error, const char* description);
@@ -32,6 +30,15 @@ class Application {
 
     void run();
     double time_since_last_frame;
+
+    std::shared_ptr<Camera> camera = std::make_shared<Camera>();
+    // TODO
+    //boolean flag, indicates whether a screen capture event should be performed
+    //on the next display event.
+    /* bool screen_capture; */ 
+    /* bool zoom_mode; */ 
+    /* bool pan_mode; */
+    /* bool trackball_mode; */
 public:
     Application();
     ~Application();
