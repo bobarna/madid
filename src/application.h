@@ -32,6 +32,7 @@ class Application {
     double time_since_last_frame;
 
     std::shared_ptr<Camera> camera = std::make_shared<Camera>();
+
     // TODO
     //boolean flag, indicates whether a screen capture event should be performed
     //on the next display event.

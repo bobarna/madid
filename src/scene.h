@@ -10,7 +10,6 @@ class Scene {
     bool render;
     bool use_emitter;
     
-    std::shared_ptr<Scene> scene = std::make_shared<Scene>();
 public:
     Scene();
     ~Scene();

@@ -9,6 +9,7 @@ Scene::~Scene() {
 }
 
 void Scene::update(double dt) {
+    sph_simulaton
     return;
 }
 

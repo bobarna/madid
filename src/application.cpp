@@ -110,5 +110,4 @@ void Application::run() {
     glLoadIdentity(); //load identity matrix
     camera->glSetupCamera();
     scene->render();
-
 }
