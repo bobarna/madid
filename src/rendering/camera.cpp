@@ -1,6 +1,6 @@
 #include "camera.h"
 
-Camera::Camera(void):
+Camera::Camera():
     aspect_ratio(1),
     pos(0, 25, -50),
     forward(0,0,1),
@@ -9,11 +9,11 @@ Camera::Camera(void):
 {
 }
 
-Camera::~Camera(void) {
+Camera::~Camera() {
 }
 
 
-void Camera::control(float delta_time, bool* inputs) {
+void Camera::control(float delta_time, const bool* inputs) {
     // process camera keys
     for(int i = 0; i < 256; i++) {
         if(!inputs[i]) continue;
@@ -23,18 +23,19 @@ void Camera::control(float delta_time, bool* inputs) {
             case 's': pos -= forward * speed * delta_time; break;
             case 'a': pos -= right * speed * delta_time; break;
             case 'd': pos += right * speed * delta_time; break;
-            case 'q': pos += glm::vec3(0,1,0) * speed * delta_time; break;
+            case 'q': pos += glm::vec3(0,-1,0) * speed * delta_time; break;
             case 'e': pos += glm::vec3(0,1,0) * speed * delta_time; break;
+            default: break;
         }
     }
 }
 
 void Camera::startDrag(int x, int y) {
-   drag_start = glm::vec3(0,0);
+   drag_start = glm::vec2(0,0);
 }
 
 void Camera::drag(int x, int y) {
-    glm::vec2 d(drag_start.x - x, drag_start.y - y);
+    glm::vec2 d(drag_start.x - (float)x, drag_start.y - (float)y);
     
     forward = glm::normalize(forward);
     right = cross(forward, glm::vec3(0,1,0));
@@ -44,7 +45,7 @@ void Camera::drag(int x, int y) {
 }
 
 
-void Camera::glSetupCamera() {
+void Camera::glSetupCamera() const {
     glMatrixMode(GL_PROJECTION);
     glLoadIdentity();
     gluPerspective(45.0f, aspect_ratio, 1.0f, 1000.0f);

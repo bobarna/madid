@@ -9,6 +9,7 @@
 
 #include "constants.h"
 #include "scene.h"
+#include "rendering/camera.h"
 
 // TODO make this class a singleton
 class Application {

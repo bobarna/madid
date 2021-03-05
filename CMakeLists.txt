@@ -15,6 +15,10 @@ add_executable(${PROJECT_NAME}
         src/scene.h
         src/rendering/camera.cpp
         src/rendering/camera.h
+        src/sph/sph_particle.h
+        src/sph/sph_particle.cpp
+        src/sph/sph_system.h
+        src/sph/sph_system.cpp
         )
 
 

@@ -9,10 +9,9 @@ Scene::~Scene() {
 }
 
 void Scene::update(double dt) {
-    sph_simulaton
-    return;
+    sph_system->update((float)dt);
 }
 
 void Scene::render() {
-    return;
+    sph_system->render();
 }
