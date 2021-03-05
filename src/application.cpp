@@ -1,5 +1,6 @@
 #include "application.h"
 
+InputHandler* Application::inputHandler = InputHandler::GetInstance();
 bool Application::dragging = false;
 
 Application::Application() {
@@ -48,9 +49,15 @@ void Application::key_callback(   GLFWwindow *window,
                                         int scancode,
                                         int action, 
                                         int mods) {
-    std::cout << key << " was pressed" << std::endl;
+//    std::cout << key << " was pressed" << std::endl;
     if(key == GLFW_KEY_ESCAPE)
         glfwSetWindowShouldClose(window, GLFW_TRUE);
+    if(action == GLFW_RELEASE)
+        InputHandler::KeyRelease(key);
+    else
+        InputHandler::KeyPress(key);
+
+    InputHandler::SetModifiers(mods);
 }
 
 
@@ -105,6 +112,8 @@ void Application::run() {
     // TODO think about rendering only in 24 FPS
     // TODO guarantee delta_time to be infinitesimal
     scene->update(delta_time);
+    camera->control(delta_time);
+
     //clear color and depth buffer
     glClearColor(0,0,0,1);
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
@@ -112,6 +121,5 @@ void Application::run() {
     camera->glSetupCamera();
     scene->render();
 }
-
 
 

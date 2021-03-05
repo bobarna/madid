@@ -1,15 +1,14 @@
 #include "sph_system.h"
 
-
 namespace sph {
 
     System::System() {
         std::cout << "Initializing sph particle system with " << N <<
             " particles." << std::endl;
 
-        for(float y = 0; y < HEIGHT/3; y += H)         
-            for(float z = 0; z < 400; z += H)
-                for (float x = 0; x < WIDTH/4; x += H)
+        for(float y = 1; y < 5; y += 0.5f)
+            for(float z = 0; z < 2; z += 0.2f)
+                for (float x = 0; x < 2; x += 0.2f)
                     if (particles.size() < N)
                     {
                         float x_off = glm::linearRand(.0f, 1.f);
@@ -21,8 +20,9 @@ namespace sph {
     }
 
     System::~System() {
-        for(int i = 0; i < particles.size(); i++)
-            delete particles[i];
+        for(auto & particle : particles)
+            delete particle;
+
     }
 
     void System::compute_density_and_pressure() {
@@ -77,36 +77,35 @@ namespace sph {
             p->pos += DT * p->v;
 
             //boundary conditions
-            if (p->pos.x - EPS < 0) {
+            if (p->pos.x - EPS <= 0) {
                 p->v.x *= BOUND_DAMPING;
-                p->pos.x = 0.0f;
-                std::cout << "bottom: " << p->pos.x << std::endl;
+                p->pos.x = EPS;
             }
 
-            if(p->pos.x + EPS > WIDTH) {
+            if(p->pos.x + EPS > 2) {
                 p->v.x *= BOUND_DAMPING;
-                p->pos.x = WIDTH - EPS;
+                p->pos.x = 2 - EPS;
             }
 
-            if(p->pos.y - EPS > HEIGHT) {
+            if(p->pos.y - EPS <= 0) {
                 p->v.y *= BOUND_DAMPING;
-                p->pos.y = HEIGHT - EPS;
+                p->pos.y = EPS;
             }
 
-            if(p->pos.y + EPS > HEIGHT) {
+            if(p->pos.y + EPS >= 51) {
                 p->v.y *= BOUND_DAMPING;
-                p->pos.y = HEIGHT - EPS;
+                p->pos.y = 51 - EPS;
             }
 
             //TODO DEPTH CONSTANT VALUE
-            if(p->pos.z - EPS < 0) {
+            if(p->pos.z - EPS <= 0) {
                 p->v.z *= BOUND_DAMPING;
                 p->pos.z = EPS;
             }
 
-            if(p->pos.z + EPS > 400) {
+            if(p->pos.z + EPS >= 2) {
                 p->v.z *= BOUND_DAMPING;
-                p->pos.z = 400 - EPS;
+                p->pos.z = 2 - EPS;
             }
         }
     }
@@ -123,12 +122,12 @@ namespace sph {
     }
 
     void System::render() {
-
         // TODO MODERN OPENGL!!!!
         glEnable(GL_POINT_SMOOTH);
         glPointSize(H / 2.f);
 
         glColor4f(0.5f, 0.5f, 0.8f, 1.f);
+
         glBegin(GL_POINTS);
         for(auto &p : particles)
             glVertex3f(p->pos.x, p->pos.y, p->pos.z);

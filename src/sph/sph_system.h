@@ -20,25 +20,25 @@ namespace sph {
     // const for equation of state
     const static float GAS_CONST = 2000.0f;
     // kernel radius
-    const static float H = 16.f;
+    const static float H = 4.f;
     // (kernel radius)^2 for optimization
     const static float H2 = H * H;
     // mass of particles
-    const static float M = 65.f;
+    const static float M = 60.f;
     // viscosity constant
-    const static float MU = 250.f; 
+    const static float MU = 42.f;
     // TODO decide the place for this
     // integration timestep
     const static float DT = 0.0005f; 
 
     // epsilon (e.g. at boundary check)
-    const static float EPS = H;
+    const static float EPS = 0.0001f;
     // damping when colliding with the boundary
     const static float BOUND_DAMPING = -0.5f;
 
     [[maybe_unused]] const static float PI = glm::pi<float>();
     // smoothing kernel as described in the Müller paper
-    const static float POLY6 = 315.f / (64 * glm::pi<float>() * glm::pow(H, 9));
+    const static float POLY6 = 315.f / (64.f * glm::pi<float>() * glm::pow(H, 9));
     const static float POLY6_GRAD_PRESS = -45.f / (glm::pi<float>()
             * glm::pow(H, 6));
     const static float POLY6_GRAD_VISC = 45.f / (glm::pi<float>() * glm::pow(H,
@@ -46,7 +46,7 @@ namespace sph {
 
     // PARTICLES
     // number of particles
-    const static int N = 500;
+    const static int N = 400;
 }
 
 namespace sph {

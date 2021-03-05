@@ -19,6 +19,8 @@ add_executable(${PROJECT_NAME}
         src/sph/sph_particle.cpp
         src/sph/sph_system.h
         src/sph/sph_system.cpp
+        src/utility/InputHandler.h
+        src/utility/InputHandler.cpp
         )
 
 

@@ -1,33 +1,42 @@
+#include <iostream>
 #include "camera.h"
 
 Camera::Camera():
     aspect_ratio(1),
-    pos(0, 25, -50),
+    pos(1, 1, -3),
     forward(0,0,1),
     right(-1,0,0),
     speed(10) 
 {
+    inputHandler = InputHandler::GetInstance();
 }
 
 Camera::~Camera() {
 }
 
 
-void Camera::control(float delta_time, const bool* inputs) {
+void Camera::control(float delta_time) {
     // process camera keys
-    for(int i = 0; i < 256; i++) {
-        if(!inputs[i]) continue;
-        switch(i)
-        {
-            case 'w': pos += forward * speed * delta_time; break;
-            case 's': pos -= forward * speed * delta_time; break;
-            case 'a': pos -= right * speed * delta_time; break;
-            case 'd': pos += right * speed * delta_time; break;
-            case 'q': pos += glm::vec3(0,-1,0) * speed * delta_time; break;
-            case 'e': pos += glm::vec3(0,1,0) * speed * delta_time; break;
-            default: break;
-        }
-    }
+    if(InputHandler::IsPressed(GLFW_KEY_W))
+        pos += forward * speed * delta_time;
+
+
+    if(InputHandler::IsPressed(GLFW_KEY_S))
+        pos -= forward * speed * delta_time;
+
+    if(InputHandler::IsPressed(GLFW_KEY_A))
+        pos -= right * speed * delta_time;
+
+    if(InputHandler::IsPressed(GLFW_KEY_D))
+        pos += right * speed * delta_time;
+
+    if(InputHandler::IsPressed(GLFW_KEY_Q))
+        pos += glm::vec3(0,-1,0) * speed * delta_time;
+
+    if(InputHandler::IsPressed(GLFW_KEY_E))
+        pos += glm::vec3(0,1,0) * speed * delta_time;
+
+    std::cout << pos.x << pos.y << pos.z << std::endl;
 }
 
 void Camera::startDrag(int x, int y) {
