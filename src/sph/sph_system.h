@@ -18,18 +18,18 @@ namespace sph {
     // rest density
     const static float REST_DENS = 1000.0f;
     // const for equation of state
-    const static float GAS_CONST = 2000.0f;
+    const static float GAS_CONST = 3.0f;
     // kernel radius
-    const static float H = 4.f;
+    const static float H = 0.0457f;
     // (kernel radius)^2 for optimization
     const static float H2 = H * H;
     // mass of particles
-    const static float M = 60.f;
+    const static float M = 0.02f;
     // viscosity constant
     const static float MU = 42.f;
     // TODO decide the place for this
     // integration timestep
-    const static float DT = 0.0005f; 
+    const static float DT = 0.01f;
 
     // epsilon (e.g. at boundary check)
     const static float EPS = 0.0001f;
