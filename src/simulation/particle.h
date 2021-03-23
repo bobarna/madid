@@ -1,9 +1,8 @@
-#ifndef MADID_SPH_PARTICLE
-#define MADID_SPH_PARTICLE
+#ifndef MADID_PARTICLE
+#define MADID_PARTICLE
 
 #include <glm/glm.hpp>
 
-namespace sph {
 class Particle {
     public:
         typedef glm::vec3 vector;
@@ -136,6 +135,5 @@ class Particle {
 //        const float &radius() const;
         
 };
-}
 
 #endif

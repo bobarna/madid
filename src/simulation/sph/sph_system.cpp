@@ -77,7 +77,7 @@ namespace sph {
 
                 glm::vec3 f_gravity = G * p_i->rho;
 
-//                p_i->f = f_pressure + f_viscosity + f_gravity;
+                p_i->f = f_pressure + f_viscosity + f_gravity;
                 p_i->f = f_gravity + f_pressure;// * 0.001f;
             }
         }

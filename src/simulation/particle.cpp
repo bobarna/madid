@@ -1,4 +1,4 @@
-#include "sph_particle.h"
+#include "particle.h"
 
 namespace sph {
 
