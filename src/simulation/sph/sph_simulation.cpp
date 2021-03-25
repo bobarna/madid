@@ -1,15 +1,13 @@
-#include "sph_system.h"
+#include "sph_simulation.h"
 
-namespace sph {
-
-    System::System() {
-        std::cout << "Initializing sph particle system with " << N <<
+    SPHSimulation::SPHSimulation() {
+        std::cout << "Initializing sph particle system with " <<sph::N<<
             " particles." << std::endl;
 
         for(float y = 1; y < 5; y += 0.5f)
             for(float z = 0; z < 2; z += 0.2f)
                 for (float x = 0; x < 2; x += 0.2f)
-                    if (particles.size() < N)
+                    if (particles.size() < sph::N)
                     {
 
                         float x_off = glm::linearRand(.0f, 1.f);
@@ -27,13 +25,13 @@ namespace sph {
             std::endl;
     }
 
-    System::~System() {
+    SPHSimulation::~SPHSimulation() {
         for(auto & particle : particles)
             delete particle;
 
     }
 
-    void System::compute_density_and_pressure() {
+    void SPHSimulation::compute_density_and_pressure() {
         for(auto &p_i : particles) {
             // compute density
             p_i->rho = 0.f;
@@ -44,17 +42,17 @@ namespace sph {
                 float r2 = glm::pow(r, 2.f);
                 
                 // 0 <= r <= d
-                if (r2 <= H2)
-                    p_i->rho += M * POLY6 * glm::pow(H2 - r2, 3.f);
+                if (r2 <= sph::H2)
+                    p_i->rho += sph::M * sph::POLY6 * glm::pow(sph::H2 - r2, 3.f);
             }
             
             // compute pressure
-            p_i->p = GAS_CONST * (p_i->rho - REST_DENS);
+            p_i->p = sph::GAS_CONST * (p_i->rho - sph::REST_DENS);
         }
 
     }
 
-    void System::compute_forces() {
+    void SPHSimulation::compute_forces() {
         for (auto &p_i : particles) {
             glm::vec3 f_pressure(0.f, 0.f, 0.f);
             glm::vec3 f_viscosity(0.f, 0.f, 0.f);
@@ -65,17 +63,17 @@ namespace sph {
                 glm::vec3 r_ijv = p_i->pos - p_j->pos;
                 float r_ij = glm::length(r_ijv);
                 
-                if(r_ij <= H) {
+                if(r_ij <= sph::H) {
                     // compute pressure force contribution
 
-                    f_pressure += -M * (p_i->p + p_j->p) / (2*p_j->rho) *
-                        POLY6_GRAD_PRESS * r_ijv/r_ij * glm::pow(H-r_ij, 2.0f);
+                    f_pressure += -sph::M * (p_i->p + p_j->p) / (2*p_j->rho) *
+                        sph::POLY6_GRAD_PRESS * r_ijv/r_ij * glm::pow(sph::H-r_ij, 2.0f);
 
-                    f_viscosity += MU * M * (p_j->v - p_i->v) / p_j->rho *
-                        POLY6_GRAD_VISC * (H - r_ij);
+                    f_viscosity += sph::MU * sph::M * (p_j->v - p_i->v) / p_j->rho *
+                        sph::POLY6_GRAD_VISC * (sph::H - r_ij);
                 }
 
-                glm::vec3 f_gravity = G * p_i->rho;
+                glm::vec3 f_gravity = sph::G * p_i->rho;
 
                 p_i->f = f_pressure + f_viscosity + f_gravity;
                 p_i->f = f_gravity + f_pressure;// * 0.001f;
@@ -83,64 +81,64 @@ namespace sph {
         }
     }
 
-    void System::integrate() {
+    void SPHSimulation::integrate() {
         for (auto &p : particles) {
             // forward euler
-            p->v += DT * p->f / p->rho;
-            p->pos += DT * p->v;
+            p->v += sph::DT * p->f / p->rho;
+            p->pos += sph::DT * p->v;
 
             const float max_b = 1.2f;
             const float min_b = 0.9f;
 
             //boundary conditions
-            if (p->pos.x - EPS <= min_b) {
-                p->v.x *= BOUND_DAMPING;
-                p->pos.x = min_b + EPS;
+            if (p->pos.x - sph::EPS <= min_b) {
+                p->v.x *= sph::BOUND_DAMPING;
+                p->pos.x = min_b + sph::EPS;
             }
 
-            if(p->pos.x + EPS > max_b) {
-                p->v.x *= BOUND_DAMPING;
-                p->pos.x = max_b - EPS;
+            if(p->pos.x + sph::EPS > max_b) {
+                p->v.x *= sph::BOUND_DAMPING;
+                p->pos.x = max_b - sph::EPS;
             }
 
             // ground
-            if(p->pos.y - EPS <= 0.0f) {
-                p->v.y *= BOUND_DAMPING;
-                p->pos.y = EPS;
+            if(p->pos.y - sph::EPS <= 0.0f) {
+                p->v.y *= sph::BOUND_DAMPING;
+                p->pos.y = sph::EPS;
             }
 
-            if(p->pos.y + EPS >= 51) {
-                p->v.y *= BOUND_DAMPING;
-                p->pos.y = 51 - EPS;
+            if(p->pos.y + sph::EPS >= 51) {
+                p->v.y *= sph::BOUND_DAMPING;
+                p->pos.y = 51 - sph::EPS;
             }
 
             //TODO DEPTH CONSTANT VALUE
-            if(p->pos.z - EPS <= min_b) {
-                p->v.z *= BOUND_DAMPING;
-                p->pos.z = min_b + EPS;
+            if(p->pos.z - sph::EPS <= min_b) {
+                p->v.z *= sph::BOUND_DAMPING;
+                p->pos.z = min_b + sph::EPS;
             }
 
-            if(p->pos.z + EPS >= max_b) {
-                p->v.z *= BOUND_DAMPING;
-                p->pos.z = max_b - EPS;
+            if(p->pos.z + sph::EPS >= max_b) {
+                p->v.z *= sph::BOUND_DAMPING;
+                p->pos.z = max_b - sph::EPS;
             }
 
             p->v *= 0.98;
         }
     }
 
-    void System::update(float t) {
+    void SPHSimulation::update(float t) {
         compute_density_and_pressure();
         compute_forces();
 
-//        if(t > DT)
-//            for(float dt = 0.0f; dt < t; dt+=DT)
+//        if(t > sph::DT)
+//            for(float dt = 0.0f; dt < t; dt+=sph::DT)
 //                integrate();
 //        else
             integrate();
     }
 
-    void System::render() {
+    void SPHSimulation::render() {
         // TODO MODERN OPENGL!!!!
         glEnable(GL_POINT_SMOOTH);
         glPointSize( 1.f);
@@ -153,4 +151,3 @@ namespace sph {
         glEnd();
         
     }
-}

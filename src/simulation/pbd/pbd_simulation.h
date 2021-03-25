@@ -1,5 +1,5 @@
-#ifndef MADID_PBD_SYSTEM_H
-#define MADID_PBD_SYSTEM_H
+#ifndef MADID_PBD_SIMULATION_H
+#define MADID_PBD_SIMULATION_H
 
 #include <cstddef>
 #include <vector>
@@ -9,7 +9,7 @@
 
 typedef glm::vec3 vec3;
 
-class pbd_system {
+class PBDSimulation {
     void solve_distance_constraint(Particle *p1, Particle *p2, float dist);
 
     void solve_bending_constraint(Particle *p1, Particle *p2, float dist);
@@ -17,13 +17,10 @@ class pbd_system {
     void solve_collision_constraint(Particle *p, vec3 &q1, vec3 &q2, vec3 &q3);
 
 public:
-    //// mid-point of the head
-    HeadObject *head;
+    //// numberOfParticlesOnASide X numberOfParticlesOnASide sized cloth will be generated
+    size_t numberOfParticlesOnASide;
 
-    //// number of hair strands to be placed on the head
-    size_t nrStrands;
-
-    //// how many segments a strand will be sub-divided into
+    //// how many segments one side of the cloth will be subdivided into
     size_t nrSegments;
 
     //// length of a segment
@@ -40,9 +37,9 @@ public:
 
     void addForce(vec3 force);
 
-    PBDSimulation(HeadObject *_head, size_t _nr_sims, size_t _nr_segments, float _l_seg);
+    PBDSimulation(size_t _nr_sims, size_t _nr_segments, float _l_seg);
 
-    void propagateHead();
+    void initParticles();
 
     void update(float dt);
 
@@ -56,4 +53,4 @@ public:
 };
 
 
-#endif //MADID_PBD_SYSTEM_H
+#endif //MADID_PBD_SIMULATION_H

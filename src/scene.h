@@ -4,7 +4,8 @@
 #include <iostream>
 #include <memory>
 
-#include "sph/sph_system.h"
+#include "simulation/sph/sph_simulation.h"
+#include "simulation/pbd/pbd_simulation.h"
 
 class Scene {
     bool draw_normals;
@@ -13,7 +14,7 @@ class Scene {
 //    bool render;
     bool use_emitter;
 
-    std::shared_ptr<sph::System> sph_system = std::make_shared<sph::System>();
+    std::shared_ptr<sph::SPHSimulation> sph_system = std::make_shared<sph::SPHSimulation>();
     
 public:
     Scene();

@@ -7,10 +7,10 @@
 #include <iostream>
 #include <vector>
 
-#include "../utility/gl.h"
+#include "../../utility/gl.h"
 
-#include "sph_particle.h"
-#include "../constants.h"
+#include "../particle.h"
+#include "../../constants.h"
 
 namespace sph {
     // external (gravitational force)
@@ -49,9 +49,8 @@ namespace sph {
     const static int N = 400;
 }
 
-namespace sph {
 
-class System {
+class SPHSimulation {
 
     std::vector<Particle*> particles;
     
@@ -61,14 +60,13 @@ class System {
     void integrate();
 
 public:
-    System();
-    ~System();
+    SPHSimulation();
+    ~SPHSimulation();
 
     // step the system by t time
     void update(float t);
 
     void render();
 };
-}
 
 #endif

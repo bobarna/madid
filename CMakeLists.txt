@@ -15,12 +15,16 @@ add_executable(${PROJECT_NAME}
         src/scene.h
         src/rendering/camera.cpp
         src/rendering/camera.h
-        src/sph/sph_particle.h
-        src/sph/sph_particle.cpp
-        src/sph/sph_system.h
-        src/sph/sph_system.cpp
         src/utility/InputHandler.h
         src/utility/InputHandler.cpp
+
+        src/simulation/particle.cpp
+        src/simulation/particle.h
+        src/simulation/pbd/pbd_simulation.cpp
+        src/simulation/pbd/pbd_simulation.h
+        src/simulation/sph/sph_simulation.cpp
+        src/simulation/sph/sph_simulation.h
+
         )
 
 
