@@ -1,6 +1,6 @@
 #include "application.h"
 
-InputHandler* Application::inputHandler = InputHandler::GetInstance();
+InputHandler *Application::inputHandler = InputHandler::GetInstance();
 bool Application::dragging = false;
 
 Application::Application() {
@@ -11,13 +11,13 @@ Application::~Application() {
     glfwDestroyWindow(window);
 }
 
-GLFWwindow* Application::get_window() {
+GLFWwindow *Application::get_window() {
     return window;
 }
 
 void Application::init() {
     this->set_callbacks();
-    
+
     glViewport(0, 0, this->width, this->height);
     glMatrixMode(GL_MODELVIEW);
     glEnable(GL_DEPTH_TEST);
@@ -28,7 +28,7 @@ void Application::init() {
     camera->glSetupCamera();
 }
 
-void Application::error_callback(int error, const char* description) {
+void Application::error_callback(int error, const char *description) {
     std::cerr << "Error: " << description << "." << std::endl;
 }
 
@@ -44,15 +44,15 @@ void Application::resize_callback(GLFWwindow *window, int w, int h) {
     glMatrixMode(GL_MODELVIEW);
 }
 
-void Application::key_callback(   GLFWwindow *window,
-                                        int key, 
-                                        int scancode,
-                                        int action, 
-                                        int mods) {
+void Application::key_callback(GLFWwindow *window,
+                               int key,
+                               int scancode,
+                               int action,
+                               int mods) {
 //    std::cout << key << " was pressed" << std::endl;
-    if(key == GLFW_KEY_ESCAPE)
+    if (key == GLFW_KEY_ESCAPE)
         glfwSetWindowShouldClose(window, GLFW_TRUE);
-    if(action == GLFW_RELEASE)
+    if (action == GLFW_RELEASE)
         InputHandler::KeyRelease(key);
     else
         InputHandler::KeyPress(key);
@@ -61,10 +61,10 @@ void Application::key_callback(   GLFWwindow *window,
 }
 
 
-void Application::mouse_click_callback( GLFWwindow *window,
-                                int button, 
-                                int action, 
-                                int mods) {
+void Application::mouse_click_callback(GLFWwindow *window,
+                                       int button,
+                                       int action,
+                                       int mods) {
     switch (button) {
         case GLFW_MOUSE_BUTTON_1:
             dragging = (action == GLFW_PRESS);
@@ -74,21 +74,21 @@ void Application::mouse_click_callback( GLFWwindow *window,
 
 
 void Application::mouse_motion_callback(GLFWwindow *window,
-                                double x, 
-                                double y) {
+                                        double x,
+                                        double y) {
     printf("mouse");
 }
 
 void Application::set_callbacks() {
-    glfwSetErrorCallback(       error_callback);
-    glfwSetWindowSizeCallback(  window, resize_callback);
-    glfwSetKeyCallback(         window, key_callback);
-    glfwSetMouseButtonCallback( window, mouse_click_callback);
-    glfwSetCursorPosCallback(   window, mouse_motion_callback);
+    glfwSetErrorCallback(error_callback);
+    glfwSetWindowSizeCallback(window, resize_callback);
+    glfwSetKeyCallback(window, key_callback);
+    glfwSetMouseButtonCallback(window, mouse_click_callback);
+    glfwSetCursorPosCallback(window, mouse_motion_callback);
 }
 
 void Application::start() {
-    while(!glfwWindowShouldClose(this->window)) {
+    while (!glfwWindowShouldClose(this->window)) {
         this->run();
         glfwSwapBuffers(window);
         glfwPollEvents();
@@ -103,7 +103,7 @@ void Application::run() {
     double delta_time = glfwGetTime() - time_since_last_frame;
     time_since_last_frame = glfwGetTime();
 
-    if(time_since_last_frame >= 1.0 / 24.0) {
+    if (time_since_last_frame >= 1.0 / 24.0) {
         glfwSetTime(0.0f);
         time_since_last_frame = 0.0f;
         tick = true;
@@ -115,7 +115,7 @@ void Application::run() {
     camera->control(delta_time);
 
     //clear color and depth buffer
-    glClearColor(0,0,0,1);
+    glClearColor(0, 0, 0, 1);
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
     glLoadIdentity(); //load identity matrix
     camera->glSetupCamera();

@@ -5,7 +5,7 @@ bool InputHandler::keyPressed[348];
 int InputHandler::modifiers = 0;
 
 InputHandler *InputHandler::GetInstance() {
-    if (singleton_ == nullptr) 
+    if (singleton_ == nullptr)
         singleton_ = new InputHandler();
 
     return singleton_;
@@ -31,7 +31,7 @@ bool InputHandler::IsShiftPressed() {
     return modifiers & GLFW_MOD_SHIFT;
 }
 
-bool InputHandler::IsControlPressed()  {
+bool InputHandler::IsControlPressed() {
     return modifiers & GLFW_MOD_CONTROL;
 }
 

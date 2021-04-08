@@ -25,7 +25,7 @@ add_executable(${PROJECT_NAME}
         src/simulation/sph/sph_simulation.cpp
         src/simulation/sph/sph_simulation.h
 
-        )
+        src/rendering/Drawable.cpp src/rendering/Drawable.h)
 
 
 # opengl

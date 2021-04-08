@@ -50,7 +50,7 @@ public:
 
     static bool IsPressed(int key);
 
-    static bool IsShiftPressed() ;
+    static bool IsShiftPressed();
 
     static bool IsControlPressed();
 

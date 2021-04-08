@@ -5,11 +5,14 @@
 #include <vector>
 #include <glm/glm.hpp>
 
+#include "../../utility/gl.h"
+
 #include "../particle.h"
+#include "../../rendering/Drawable.h"
 
 typedef glm::vec3 vec3;
 
-class PBDSimulation {
+class PBDSimulation : Drawable {
     void solve_distance_constraint(Particle *p1, Particle *p2, float dist);
 
     void solve_bending_constraint(Particle *p1, Particle *p2, float dist);
@@ -37,6 +40,8 @@ public:
 
     void addForce(vec3 force);
 
+    PBDSimulation();
+
     PBDSimulation(size_t _nr_sims, size_t _nr_segments, float _l_seg);
 
     void initParticles();
@@ -48,8 +53,6 @@ public:
     vec3 getExternalForces() const;
 
     void resetExternalForces();
-
-    std::vector<Particle *> CreateStrand(size_t segments, float l, vec3 startPos, vec3 color);
 };
 
 

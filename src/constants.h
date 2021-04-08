@@ -4,6 +4,6 @@
 const int WIDTH = 500;
 const int HEIGHT = 500;
 
-char * const NAME = "Madid";
+char *const NAME = "Madid";
 
 #endif

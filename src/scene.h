@@ -11,16 +11,20 @@ class Scene {
     bool draw_normals;
     bool draw_surface;
     bool draw_velocity;
-//    bool render;
     bool use_emitter;
 
-    std::shared_ptr<sph::SPHSimulation> sph_system = std::make_shared<sph::SPHSimulation>();
-    
+    std::shared_ptr<SPHSimulation> sph_system = std::make_shared<SPHSimulation>();
+
+    // TODO set parameters here
+    std::shared_ptr<PBDSimulation> pbd_system = std::make_shared<PBDSimulation>();
+
 public:
     Scene();
+
     ~Scene();
 
     void update(double dt);
+
     void render();
 };
 

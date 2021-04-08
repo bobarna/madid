@@ -1,6 +1,14 @@
 #include "pbd_simulation.h"
+
 void PBDSimulation::addForce(vec3 force) {
     externalForces += force;
+}
+
+PBDSimulation::PBDSimulation() {
+    numberOfParticlesOnASide = 10;
+    nrSegments = 10;
+    lSeg = 0.08f;
+    initParticles();
 }
 
 PBDSimulation::PBDSimulation(size_t _nr_sims, size_t _nr_segments, float _l_seg) :
@@ -18,9 +26,29 @@ PBDSimulation::PBDSimulation(size_t _nr_sims, size_t _nr_segments, float _l_seg)
 }
 
 void PBDSimulation::initParticles() {
+
+    vec3 startPos = vec3(-1, 0, -1);
+
     for (size_t i = 0; i < numberOfParticlesOnASide; i++) {
         vec3 color = vec3(222.0f, 101.0f, 32.0f);
-        strands.emplace_back(CreateStrand(nrSegments, lSeg, currPos.position * vec3(1, -1, 1), color));
+        std::vector<Particle *> currentStrand;
+
+        for (size_t j = 0; j < numberOfParticlesOnASide; j++) {
+            // mass of the current particle
+            float m = .25f;
+            vec3 currPos = startPos + vec3((float) i * lSeg, 0, (float) j * lSeg);
+
+            // infinite mass on the corners
+            if ((i == 0 && j == 0) ||
+                (i == 0 && j == numberOfParticlesOnASide - 1) ||
+                (i == numberOfParticlesOnASide - 1 && j == 0) ||
+                (i == numberOfParticlesOnASide - 1 && j == numberOfParticlesOnASide - 1)
+                    ) {
+                currentStrand.push_back(new Particle(currPos, 0, color));
+            } else currentStrand.push_back(new Particle(currPos, 1 / m, color));
+        }
+
+        strands.emplace_back(currentStrand);
     }
 }
 
@@ -89,8 +117,10 @@ void PBDSimulation::solve_bending_constraint(Particle *p1, Particle *p2, float d
                 (length(p1->tmp_pos - p2->tmp_pos) - dist) *
                 (p1->tmp_pos - p2->tmp_pos) / length(p1->tmp_pos - p2->tmp_pos);
 
-    p1->tmp_pos += 0.6 * d_p1;
-    p2->tmp_pos += 0.6 * d_p2;
+    // TODO define *(float, vec3) operator...
+    float damping = 0.6f;
+    p1->tmp_pos += vec3(d_p1.x * damping, d_p1.y * damping, d_p1.z * damping);
+    p2->tmp_pos += vec3(d_p2.x * damping, d_p2.y * damping, d_p2.z * damping);
 }
 
 void PBDSimulation::solve_collision_constraint(Particle *p, vec3 &q1, vec3 &q2, vec3 &q3) {
@@ -143,27 +173,6 @@ void PBDSimulation::Draw() {
 
 vec3 PBDSimulation::getExternalForces() const {
     return externalForces;
-}
-
-std::vector<Particle *> PBDSimulation::CreateStrand(size_t n, float l, vec3 startPos, vec3 color) {
-    vec3 currPos = startPos;
-    std::vector<Particle *> currentStrand;
-
-    for (size_t i = 0; i < n; i++) {
-        // random mass
-        // A single strand of hair can weigh between .2 – .5 milligrams,
-        // which is 2.0e-7 kg == 10^(-7) kg
-        float m = util::randomOffsetf(.35f, .15f);
-
-        // first particle's position is infinite
-        if (i == 0) currentStrand.push_back(new Particle(currPos, 0, color));
-        else currentStrand.push_back(new Particle(currPos, 1 / m, color));
-
-        // propagate particles downward
-        currPos.y -= l;
-    }
-
-    return currentStrand;
 }
 
 void PBDSimulation::resetExternalForces() {

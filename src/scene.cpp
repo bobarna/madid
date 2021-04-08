@@ -9,7 +9,7 @@ Scene::~Scene() {
 }
 
 void Scene::update(double dt) {
-    sph_system->update((float)dt);
+    sph_system->update((float) dt);
 }
 
 void Scene::render() {

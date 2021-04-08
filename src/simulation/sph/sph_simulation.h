@@ -40,9 +40,9 @@ namespace sph {
     // smoothing kernel as described in the Müller paper
     const static float POLY6 = 315.f / (64.f * glm::pi<float>() * glm::pow(H, 9));
     const static float POLY6_GRAD_PRESS = -45.f / (glm::pi<float>()
-            * glm::pow(H, 6));
+                                                   * glm::pow(H, 6));
     const static float POLY6_GRAD_VISC = 45.f / (glm::pi<float>() * glm::pow(H,
-                6));
+                                                                             6));
 
     // PARTICLES
     // number of particles
@@ -52,15 +52,17 @@ namespace sph {
 
 class SPHSimulation {
 
-    std::vector<Particle*> particles;
-    
+    std::vector<Particle *> particles;
+
     void compute_density_and_pressure();
+
     void compute_forces();
 
     void integrate();
 
 public:
     SPHSimulation();
+
     ~SPHSimulation();
 
     // step the system by t time
