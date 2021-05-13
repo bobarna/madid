@@ -6,13 +6,13 @@
 #include <glm/glm.hpp>
 
 #include "../../utility/gl.h"
-
 #include "../particle.h"
-#include "../../rendering/Drawable.h"
+#include "../../rendering/geometry.h"
+#include "../simulation.h"
 
 typedef glm::vec3 vec3;
 
-class PBDSimulation : Drawable {
+class PBDSimulation : public Geometry {
     void solve_distance_constraint(Particle *p1, Particle *p2, float dist);
 
     void solve_bending_constraint(Particle *p1, Particle *p2, float dist);
@@ -20,10 +20,10 @@ class PBDSimulation : Drawable {
     void solve_collision_constraint(Particle *p, vec3 &q1, vec3 &q2, vec3 &q3);
 
 public:
-    //// numberOfParticlesOnASide X numberOfParticlesOnASide sized cloth will be generated
-    size_t numberOfParticlesOnASide;
+    //// number of hair strands to be placed on the head
+    size_t nrStrands;
 
-    //// how many segments one side of the cloth will be subdivided into
+    //// how many segments a strand will be sub-divided into
     size_t nrSegments;
 
     //// length of a segment
@@ -40,19 +40,15 @@ public:
 
     void addForce(vec3 force);
 
-    PBDSimulation();
-
     PBDSimulation(size_t _nr_sims, size_t _nr_segments, float _l_seg);
-
-    void initParticles();
 
     void update(float dt);
 
-    void Draw();
-
-    vec3 getExternalForces() const;
+    void render() override;
 
     void resetExternalForces();
+
+    std::vector<Particle *> CreateFiber(size_t n, float l, vec3 startPos, vec3 color);
 };
 
 

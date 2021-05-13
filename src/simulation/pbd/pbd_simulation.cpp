@@ -4,52 +4,20 @@ void PBDSimulation::addForce(vec3 force) {
     externalForces += force;
 }
 
-PBDSimulation::PBDSimulation() {
-    numberOfParticlesOnASide = 10;
-    nrSegments = 10;
-    lSeg = 0.08f;
-    initParticles();
-}
-
 PBDSimulation::PBDSimulation(size_t _nr_sims, size_t _nr_segments, float _l_seg) :
-        numberOfParticlesOnASide(_nr_sims),
+        nrStrands(_nr_sims),
         nrSegments(_nr_segments),
         lSeg(_l_seg),
         externalForces(.0f, .0f, .0f) {
 
-    // placing hair on the head
-    initParticles();
+    // placing the fibers of the cloth
+    for (size_t i = 0; i < nrStrands; i++) {
+        vec3 currPos(-.5f, 0.f, lSeg * (float)i);
 
-    /* collisionTriangles.emplace_back(0.15, -1, 1); */
-    /* collisionTriangles.emplace_back(0.15, 1, 0); */
-    /* collisionTriangles.emplace_back(0.15, -1, -1); */
-}
-
-void PBDSimulation::initParticles() {
-
-    vec3 startPos = vec3(-1, 0, -1);
-
-    for (size_t i = 0; i < numberOfParticlesOnASide; i++) {
-        vec3 color = vec3(222.0f, 101.0f, 32.0f);
-        std::vector<Particle *> currentStrand;
-
-        for (size_t j = 0; j < numberOfParticlesOnASide; j++) {
-            // mass of the current particle
-            float m = .25f;
-            vec3 currPos = startPos + vec3((float) i * lSeg, 0, (float) j * lSeg);
-
-            // infinite mass on the corners
-            if ((i == 0 && j == 0) ||
-                (i == 0 && j == numberOfParticlesOnASide - 1) ||
-                (i == numberOfParticlesOnASide - 1 && j == 0) ||
-                (i == numberOfParticlesOnASide - 1 && j == numberOfParticlesOnASide - 1)
-                    ) {
-                currentStrand.push_back(new Particle(currPos, 0, color));
-            } else currentStrand.push_back(new Particle(currPos, 1 / m, color));
-        }
-
-        strands.emplace_back(currentStrand);
+        vec3 color = vec3(0.9f, 0.3f, 0.3f);
+        strands.emplace_back(CreateFiber(nrSegments, lSeg, currPos * vec3(1, -1, 1), color));
     }
+
 }
 
 void PBDSimulation::update(float dt) {
@@ -58,7 +26,6 @@ void PBDSimulation::update(float dt) {
         for (auto &p : strand) {
             p->v = p->v + dt * (p->w) * externalForces;
             // damp velocities
-            // TODO better damping technique: (3.5) https://matthias-research.github.io/pages/publications/posBasedDyn.pdf
             p->v *= .99f;
 
             // calculating temporal positions
@@ -70,18 +37,26 @@ void PBDSimulation::update(float dt) {
     // solve constraints
     size_t num_iter = 10;
     for (size_t iter = 0; iter < num_iter; iter++) {
-        for (auto &strand: strands) {
-            //keep first particle in place
+        for (size_t s = 0; s < strands.size(); s++) {
+            std::vector<Particle*>& strand = strands.at(s);
+
             // TODO position constraint
+            //keep first particle in place
             strand.at(0)->tmp_pos = strand.at(0)->pos;
-            //distance between subsequent particles should be l
+            // keep the last one fixed as well
+            strand.at(strand.size()-1)->tmp_pos = strand.at(strand.size()-1)->pos;
+
+            //distance between other particles should be l
             for (size_t i = 1; i < strand.size(); i++) {
                 solve_distance_constraint(strand[i - 1], strand[i], lSeg);
-                if (i < strand.size() - 1) solve_bending_constraint(strand[i - 1], strand[i + 1], lSeg * 0.9f);
-                if (i < strand.size() - 2 && i > 1)
-                    solve_bending_constraint(strand[i - 2], strand[i + 2], lSeg * 1.9f);
-                /* solve_collision_constraint(strand[i], */
-                /*                            collisionTriangles[0], collisionTriangles[1], collisionTriangles[2]); */
+            }
+
+            // distance constraint for neighboring strands
+            if(s != 0 && s != strands.size() - 1) {
+                std::vector<Particle*>& next_strand = strands.at(s+1);
+                // TODO refactor distance into constant
+                for (size_t i = 1; i < strand.size()-1; i++)
+                    solve_distance_constraint(strand[i], next_strand[i], lSeg);
             }
         }
     }
@@ -105,8 +80,8 @@ void PBDSimulation::solve_distance_constraint(Particle *p1, Particle *p2, float 
                 (length(p1->tmp_pos - p2->tmp_pos) - dist) *
                 (p1->tmp_pos - p2->tmp_pos) / length(p1->tmp_pos - p2->tmp_pos);
 
-    p1->tmp_pos += d_p1;
-    p2->tmp_pos += d_p2;
+    p1->tmp_pos += 0.8f*d_p1;
+    p2->tmp_pos += 0.8f*d_p2;
 }
 
 void PBDSimulation::solve_bending_constraint(Particle *p1, Particle *p2, float dist) {
@@ -117,10 +92,8 @@ void PBDSimulation::solve_bending_constraint(Particle *p1, Particle *p2, float d
                 (length(p1->tmp_pos - p2->tmp_pos) - dist) *
                 (p1->tmp_pos - p2->tmp_pos) / length(p1->tmp_pos - p2->tmp_pos);
 
-    // TODO define *(float, vec3) operator...
-    float damping = 0.6f;
-    p1->tmp_pos += vec3(d_p1.x * damping, d_p1.y * damping, d_p1.z * damping);
-    p2->tmp_pos += vec3(d_p2.x * damping, d_p2.y * damping, d_p2.z * damping);
+    p1->tmp_pos += 0.6f*d_p1;
+    p2->tmp_pos += 0.6f*d_p2;
 }
 
 void PBDSimulation::solve_collision_constraint(Particle *p, vec3 &q1, vec3 &q2, vec3 &q3) {
@@ -133,7 +106,7 @@ void PBDSimulation::solve_collision_constraint(Particle *p, vec3 &q1, vec3 &q2, 
     p->tmp_pos += d_p;
 }
 
-void PBDSimulation::Draw() {
+void PBDSimulation::render() {
     std::vector<float> particlePosAndColor;
     for (auto &strand : strands)
         for (size_t i = 0; i < strand.size() - 1; ++i) {
@@ -171,8 +144,23 @@ void PBDSimulation::Draw() {
     glDrawArrays(GL_LINES, 0, particlePosAndColor.size() / 6);
 }
 
-vec3 PBDSimulation::getExternalForces() const {
-    return externalForces;
+std::vector<Particle *> PBDSimulation::CreateFiber(size_t n, float l, vec3 startPos, vec3 color) {
+    vec3 currPos = startPos;
+    std::vector<Particle *> currentStrand;
+
+    for (size_t i = 0; i < n; i++) {
+        // slightly random mass for better visual results
+        float m = (float) rand() / RAND_MAX * .35f + .15f;
+
+        // first and last particle's position is infinite
+        if (i == 0 || i == n-1) currentStrand.push_back(new Particle(currPos, 0, color));
+        else currentStrand.push_back(new Particle(currPos, 1 / m, color));
+
+        // propagate particles horizontally
+        currPos.x += l;
+    }
+
+    return currentStrand;
 }
 
 void PBDSimulation::resetExternalForces() {

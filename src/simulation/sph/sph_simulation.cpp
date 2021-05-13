@@ -8,9 +8,6 @@ SPHSimulation::SPHSimulation() {
         for (float z = 0; z < 2; z += 0.2f)
             for (float x = 0; x < 2; x += 0.2f)
                 if (particles.size() < sph::N) {
-
-                    float x_off = glm::linearRand(.0f, 1.f);
-//                        particles.emplace_back(new Particle(x + x_off, y, z));
                     particles.emplace_back(
                             new Particle(
                                     glm::linearRand(1.f, 1.1f),
@@ -25,9 +22,7 @@ SPHSimulation::SPHSimulation() {
 }
 
 SPHSimulation::~SPHSimulation() {
-    for (auto &particle : particles)
-        delete particle;
-
+    for (auto &particle : particles) { delete particle; }
 }
 
 void SPHSimulation::compute_density_and_pressure() {

@@ -11,12 +11,10 @@
 #include "constants.h"
 #include "scene.h"
 #include "rendering/camera.h"
-#include "utility/InputHandler.h"
+#include "utility/input_handler.h"
 
 // TODO make this class a singleton
 class Application {
-
-
     int width = WIDTH;
     int height = HEIGHT;
 
@@ -42,8 +40,6 @@ class Application {
     void run();
 
     double time_since_last_frame;
-
-    std::shared_ptr<Camera> camera = std::make_shared<Camera>();
 
     // TODO
     //boolean flag, indicates whether a screen capture event should be performed

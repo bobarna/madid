@@ -4,8 +4,9 @@
 #include <iostream>
 #include <memory>
 
-#include "simulation/sph/sph_simulation.h"
-#include "simulation/pbd/pbd_simulation.h"
+#include "rendering/objects/object.h"
+#include "rendering/objects/simulation_object.h"
+#include "rendering/camera.h"
 
 class Scene {
     bool draw_normals;
@@ -13,10 +14,10 @@ class Scene {
     bool draw_velocity;
     bool use_emitter;
 
-    std::shared_ptr<SPHSimulation> sph_system = std::make_shared<SPHSimulation>();
+    std::shared_ptr<Camera> camera = std::make_shared<Camera>();
 
-    // TODO set parameters here
-    std::shared_ptr<PBDSimulation> pbd_system = std::make_shared<PBDSimulation>();
+    // TODO shared_ptr
+    std::vector<std::shared_ptr<SimulationObject>> simulations;
 
 public:
     Scene();

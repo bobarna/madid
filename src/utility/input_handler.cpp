@@ -1,4 +1,4 @@
-#include "InputHandler.h"
+#include "input_handler.h"
 
 InputHandler *InputHandler::singleton_ = nullptr;
 bool InputHandler::keyPressed[348];

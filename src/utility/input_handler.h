@@ -1,5 +1,5 @@
-#ifndef MADID_INPUTHANDLER_H
-#define MADID_INPUTHANDLER_H
+#ifndef MADID_INPUT_HANDLER_H
+#define MADID_INPUT_HANDLER_H
 
 #include "gl.h"
 
@@ -64,4 +64,4 @@ public:
 
 };
 
-#endif //MADID_INPUTHANDLER_H
+#endif //MADID_INPUT_HANDLER_H

@@ -11,6 +11,7 @@
 
 #include "../particle.h"
 #include "../../constants.h"
+#include "../simulation.h"
 
 namespace sph {
     // external (gravitational force)
@@ -50,7 +51,7 @@ namespace sph {
 }
 
 
-class SPHSimulation {
+class SPHSimulation : Simulation {
 
     std::vector<Particle *> particles;
 
@@ -66,9 +67,9 @@ public:
     ~SPHSimulation();
 
     // step the system by t time
-    void update(float t);
+    void update(float t) override;
 
-    void render();
+    void render() override;
 };
 
 #endif

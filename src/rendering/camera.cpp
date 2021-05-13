@@ -1,5 +1,6 @@
 #include <iostream>
 #include "camera.h"
+#include "../utility/custom_math.h"
 
 Camera::Camera() :
         aspect_ratio(1),
@@ -18,7 +19,6 @@ void Camera::control(float delta_time) {
     // process camera keys
     if (InputHandler::IsPressed(GLFW_KEY_W))
         pos += forward * speed * delta_time;
-
 
     if (InputHandler::IsPressed(GLFW_KEY_S))
         pos -= forward * speed * delta_time;
@@ -64,5 +64,38 @@ void Camera::glSetupCamera() const {
             pos.x, pos.y, pos.z,
             pos.x + forward.x, pos.y + forward.y, pos.z + forward.z,
             0.0f, 1.0f, 0.0f);
+}
+
+glm::mat4 Camera::V() const {
+    glm::vec3 w = normalize(forward);
+    glm::vec3 u = normalize(right);
+    glm::vec3 v = cross(w, u);
+    return translate_matrix(-pos) * glm::mat4(
+            u.x, v.x, w.x, 0,
+            u.y, v.y, w.y, 0,
+            u.z, v.z, w.z, 0,
+            0, 0, 0, 1
+    );
+}
+
+glm::mat4 Camera::P() const {
+    float fov = 1.38f;
+    float asp = aspect_ratio;
+    float fp = 0.2f;
+    float bp = 10;
+
+    return mat4(1.0f / (tanf(fov / 2) * asp), 0, 0, 0,
+                0, 1.0f / tanf(fov / 2), 0, 0,
+                0, 0, -(fp + bp) / (bp - fp), -1,
+                0, 0, -2 * fp * bp / (bp - fp), 0);
+}
+
+RenderState Camera::getState() {
+    RenderState state;
+    state.wEye = pos;
+    state.V = V();
+    state.P = P();
+
+    return state;
 }
 

@@ -9,6 +9,7 @@ Application::Application() {
 
 Application::~Application() {
     glfwDestroyWindow(window);
+    glfwTerminate();
 }
 
 GLFWwindow *Application::get_window() {
@@ -24,8 +25,6 @@ void Application::init() {
     glDepthMask(GL_TRUE);
     glLoadIdentity();
     glClearColor(255.0f / 255.0f, 25.0f / 255.0f, 25.0f / 255.0f, 1.0f);
-
-    camera->glSetupCamera();
 }
 
 void Application::error_callback(int error, const char *description) {
@@ -112,13 +111,13 @@ void Application::run() {
     // TODO think about rendering only in 24 FPS
     // TODO guarantee delta_time to be infinitesimal
     scene->update(delta_time);
-    camera->control(delta_time);
+
 
     //clear color and depth buffer
     glClearColor(0, 0, 0, 1);
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
     glLoadIdentity(); //load identity matrix
-    camera->glSetupCamera();
+
     scene->render();
 }
 

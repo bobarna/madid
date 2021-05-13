@@ -3,7 +3,8 @@
 
 #include <glm/glm.hpp>
 #include "../utility/gl.h"
-#include "../utility/InputHandler.h"
+#include "../utility/input_handler.h"
+#include "render_state.h"
 
 class Camera {
     float aspect_ratio;
@@ -32,6 +33,13 @@ public:
 
     ~Camera();
 
+    // View Matrix: translates the center to the origin
+    glm::mat4 V() const;
+
+    // Projection Matrix
+    glm::mat4 P() const;
+
+    RenderState getState();
 };
 
 #endif
