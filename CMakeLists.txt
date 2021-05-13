@@ -1,47 +1,47 @@
 cmake_minimum_required(VERSION 3.1)
+
 project(madid)
 
 set(CMAKE_CXX_STANDARD 17)
 #set(CMAKE_CXX_FLAGS "-Wall -Wextra -Werror -pedantic")
-set(CMAKE_CXX_FLAGS "-Wall -Wextra -pedantic -Wunused-parameter")
-set(OpenGL_GL_PREFERENCE "LEGACY")
+set(CMAKE_CXX_FLAGS "-Wall -Wextra -pedantic")
 
 add_executable(${PROJECT_NAME}
         src/main.cpp
-        src/constants.h 
-        src/utility/gl.h
-        src/application.cpp
-        src/application.h
-        src/scene.cpp
-        src/scene.h
-        src/rendering/camera.cpp
-        src/rendering/camera.h
-        src/utility/input_handler.h
-        src/utility/input_handler.cpp
-
-        src/simulation/particle.cpp
-        src/simulation/particle.h
-        src/simulation/pbd/pbd_simulation.cpp
-        src/simulation/pbd/pbd_simulation.h
-        src/simulation/sph/sph_simulation.cpp
-        src/simulation/sph/sph_simulation.h
-
-        src/rendering/geometry.cpp src/rendering/geometry.h
-        src/rendering/vertex_data.cpp src/rendering/vertex_data.h
-        src/rendering/objects/object.cpp src/rendering/objects/object.h src/rendering/objects/simulation_object.cpp src/rendering/objects/simulation_object.h src/simulation/simulation.h src/utility/custom_math.h src/rendering/render_state.h src/rendering/textures/texture.cpp src/rendering/textures/texture.h src/rendering/shaders/shader.cpp src/rendering/shaders/shader.h src/rendering/shaders/gpu_program.cpp src/rendering/shaders/gpu_program.h src/rendering/textures/texture_uniform_color.h src/rendering/materials/material.h src/rendering/lights/light.cpp src/rendering/lights/light.h src/rendering/shaders/basic_shader.cpp src/rendering/shaders/basic_shader.h)
-
+        src/utils/math.h src/utils/math.cpp
+        src/utils/util.h src/utils/util.cpp
+        src/geometries/PBDSimulation.h src/geometries/PBDSimulation.cpp
+        src/rendering/Camera.h src/rendering/Camera.cpp
+        src/objects/Object.h src/objects/Object.cpp
+        src/rendering/Scene.cpp
+        src/rendering/shaders/Shader.cpp
+        src/utils/InputHandler.cpp
+        src/geometries/Geometry.cpp
+        src/objects/PBDSimulationObject.cpp
+        src/objects/HeadObject.cpp
+        src/rendering/shaders/BasicShader.cpp src/rendering/shaders/BasicShader.h
+        src/rendering/shaders/PhongShader.cpp src/rendering/shaders/PhongShader.h
+        src/geometries/ParamSurface.cpp src/geometries/ParamSurface.h
+        src/geometries/VertexData.h src/rendering/materials/Material.cpp src/rendering/materials/Material.h src/rendering/textures/Texture.cpp src/rendering/textures/Texture.h src/rendering/lights/Light.cpp src/rendering/lights/Light.h src/geometries/VertexData.cpp src/utils/OBJReader.cpp src/utils/OBJReader.h src/geometries/ObjGeometry.cpp src/geometries/ObjGeometry.h
+        src/geometries/SPHSimulation.cpp src/geometries/SPHSimulation.h
+        src/objects/SPHSimulationObject.cpp src/objects/SPHSimulationObject.h)
 
 # opengl
 find_package(OpenGL REQUIRED)
+include_directories(${OPENGL_INCLUDE_DIRS})
 
-link_directories(${GTKMM_LIBRARY_DIRS})
-include_directories(${GTKMM_INCLUDE_DIRS})
+# glfw
+find_package(glfw3 REQUIRED)
+include_directories(${GLFW_INCLUDE_DIRS})
+link_libraries(${GLFW_LIBRARY_DIRS})
+
+# glew
+find_package(GLEW REQUIRED)
+include_directories(${GLEW_INCLUDE_DIRS})
 
 target_link_libraries(
         ${PROJECT_NAME}
-        GL
-        GLU
         glfw
-        GLEW
+        ${OPENGL_LIBRARIES}
+        ${GLEW_LIBRARIES}
 )
-
