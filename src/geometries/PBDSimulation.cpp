@@ -11,12 +11,16 @@ PBDSimulation::PBDSimulation(size_t _nr_sims, size_t _nr_segments, float _l_seg)
         lSeg(_l_seg),
         externalForces(.0f, .0f, .0f) {
 
+    bool red = true;
     // placing the fibers of the cloth
     for (size_t i = 0; i < nrStrands; i++) {
         vec3 currPos(-0.15f, -0.15f, lSeg*0.5f * (float)i - 0.15);
 
         vec3 color = vec3(0.9f, 0.3f, 0.3f);
-        strands.emplace_back(CreateFiber(nrSegments, lSeg, currPos * vec3(1, -1, 1), color));
+
+        if(i%8 == 4) red = !red;
+
+        strands.emplace_back(CreateFiber(nrSegments, lSeg, currPos * vec3(1, -1, 1), color, red));
     }
 
 }
@@ -123,37 +127,37 @@ void PBDSimulation::Draw() {
             particlePosAndColor.push_back(strand[i + 1]->pos.x);
             particlePosAndColor.push_back(strand[i + 1]->pos.y);
             particlePosAndColor.push_back(strand[i + 1]->pos.z);
-            particlePosAndColor.push_back(strand[i + 1]->color.x);
-            particlePosAndColor.push_back(strand[i + 1]->color.y);
-            particlePosAndColor.push_back(strand[i + 1]->color.z);
+            particlePosAndColor.push_back(strand[i]->color.x);
+            particlePosAndColor.push_back(strand[i]->color.y);
+            particlePosAndColor.push_back(strand[i]->color.z);
 
             particlePosAndColor.push_back(next_strand[i]->pos.x);
             particlePosAndColor.push_back(next_strand[i]->pos.y);
             particlePosAndColor.push_back(next_strand[i]->pos.z);
-            particlePosAndColor.push_back(next_strand[i]->color.x);
-            particlePosAndColor.push_back(next_strand[i]->color.y);
-            particlePosAndColor.push_back(next_strand[i]->color.z);
+            particlePosAndColor.push_back(strand[i]->color.x);
+            particlePosAndColor.push_back(strand[i]->color.y);
+            particlePosAndColor.push_back(strand[i]->color.z);
 
             particlePosAndColor.push_back(next_strand[i]->pos.x);
             particlePosAndColor.push_back(next_strand[i]->pos.y);
             particlePosAndColor.push_back(next_strand[i]->pos.z);
-            particlePosAndColor.push_back(next_strand[i]->color.x);
-            particlePosAndColor.push_back(next_strand[i]->color.y);
-            particlePosAndColor.push_back(next_strand[i]->color.z);
+            particlePosAndColor.push_back(strand[i]->color.x);
+            particlePosAndColor.push_back(strand[i]->color.y);
+            particlePosAndColor.push_back(strand[i]->color.z);
 
             particlePosAndColor.push_back(strand[i + 1]->pos.x);
             particlePosAndColor.push_back(strand[i + 1]->pos.y);
             particlePosAndColor.push_back(strand[i + 1]->pos.z);
-            particlePosAndColor.push_back(strand[i + 1]->color.x);
-            particlePosAndColor.push_back(strand[i + 1]->color.y);
-            particlePosAndColor.push_back(strand[i + 1]->color.z);
+            particlePosAndColor.push_back(strand[i]->color.x);
+            particlePosAndColor.push_back(strand[i]->color.y);
+            particlePosAndColor.push_back(strand[i]->color.z);
 
             particlePosAndColor.push_back(next_strand[i+1]->pos.x);
             particlePosAndColor.push_back(next_strand[i+1]->pos.y);
             particlePosAndColor.push_back(next_strand[i+1]->pos.z);
-            particlePosAndColor.push_back(next_strand[i+1]->color.x);
-            particlePosAndColor.push_back(next_strand[i+1]->color.y);
-            particlePosAndColor.push_back(next_strand[i+1]->color.z);
+            particlePosAndColor.push_back(strand[i]->color.x);
+            particlePosAndColor.push_back(strand[i]->color.y);
+            particlePosAndColor.push_back(strand[i]->color.z);
         }
     }
 
@@ -181,7 +185,7 @@ vec3 PBDSimulation::getExternalForces() const {
     return externalForces;
 }
 
-std::vector<Particle *> PBDSimulation::CreateFiber(size_t n, float l, vec3 startPos, vec3 color) {
+std::vector<Particle *> PBDSimulation::CreateFiber(size_t n, float l, vec3 startPos, vec3 color, bool red) {
     vec3 currPos = startPos;
     std::vector<Particle *> currentStrand;
 
@@ -190,6 +194,14 @@ std::vector<Particle *> PBDSimulation::CreateFiber(size_t n, float l, vec3 start
         // A single strand of hair can weigh between .2 – .5 milligrams,
         // which is 2.0e-7 kg == 10^(-7) kg
         float m = util::randomOffsetf(.35f, .15f);
+
+        if(red) {
+            if((i % 8) < 4) color = vec3(0.9f, 0.3f, 0.3f);
+            else color = vec3(0.9f, 0.9f, 0.9f);
+        } else {
+            if((i % 8) >= 4) color = vec3(0.9f, 0.3f, 0.3f);
+            else color = vec3(0.9f, 0.9f, 0.9f);
+        }
 
         // first and last particle's position is infinite
         if (i == 0 || i == n-1) currentStrand.push_back(new Particle(currPos, 0, color));

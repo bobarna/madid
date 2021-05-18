@@ -47,7 +47,7 @@ public:
 
     void resetExternalForces();
 
-    std::vector<Particle *> CreateFiber(size_t n, float l, vec3 startPos, vec3 color);
+    std::vector<Particle *> CreateFiber(size_t n, float l, vec3 startPos, vec3 color, bool red);
 };
 
 

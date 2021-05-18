@@ -139,7 +139,7 @@ int main(int argc, char **argv) {
     }
 
     glfwInit();
-    window = glfwCreateWindow(WIDTH, HEIGHT, "Brave-2", NULL, NULL);
+    window = glfwCreateWindow(WIDTH, HEIGHT, "mmadid", NULL, NULL);
     if (!window) {
         std::cerr << "ERROR: could not open window with GLFW3" << std::endl;
         glfwTerminate();
