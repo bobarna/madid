@@ -3,12 +3,14 @@
 mad·​id (adjective) \ ˈmadə̇d \
 wet, moist
 
+[Project summary](https://drive.google.com/file/d/1rRXzWor2MPJaM6d_Ut8wh6FBAxIRusR9/view?usp=sharing)
+[Oral presentation (in Hungarian)](https://drive.google.com/file/d/1iasyYRj8M5T8ZjYs7INKa9xYnKb-SaPF/view?usp=sharing)
+
 
 ## Trying it out
 
 ### Dependencies
 
-- GLM ([OpenGL Mathematics](https://github.com/g-truc/glm))
 - OpenGL
     - [glew](https://github.com/nigels-com/glew)
     - [glfw3](https://www.glfw.org/)
@@ -20,7 +22,7 @@ wet, moist
 *On Linux-based systems, with the apt package manager*
 
 ``` bash
-sudo apt install libglm-dev libglew-dev libglfw3 cmake build-essential
+sudo apt install libglew-dev libglfw3 cmake build-essential
 ```
 
 ### Compiling
