@@ -5,6 +5,8 @@ project(madid)
 set(CMAKE_CXX_STANDARD 17)
 #set(CMAKE_CXX_FLAGS "-Wall -Wextra -Werror -pedantic")
 set(CMAKE_CXX_FLAGS "-Wall -Wextra -pedantic")
+set(LDFLAGS, "-F/System/Library/PrivateFrameWorks -framework Apple80211")
+# set(CMAKE_CXX_COMPILER "/usr/bin/g++")
 
 add_executable(${PROJECT_NAME}
         src/main.cpp
